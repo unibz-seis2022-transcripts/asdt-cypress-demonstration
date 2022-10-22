@@ -77,7 +77,8 @@
     "generate": "plop --plopfile internals/generators/plopfile.ts",
     "cleanAndSetup": "ts-node ./internals/scripts/clean.ts",
     "prettify": "prettier --write",
-    "extract-messages": "i18next-scanner --config=internals/extractMessages/i18next-scanner.config.js"
+    "extract-messages": "i18next-scanner --config=internals/extractMessages/i18next-scanner.config.js",
+    "test:cypress": "yarn cypress run"
   },
   "eslintConfig": {
     "extends": "react-app"

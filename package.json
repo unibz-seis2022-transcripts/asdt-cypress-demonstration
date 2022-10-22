@@ -122,5 +122,8 @@
         "statements": 90
       }
     }
+  },
+  "devDependencies": {
+    "cypress": "10.10.0"
   }
 }

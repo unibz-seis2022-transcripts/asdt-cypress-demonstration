@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './styles/mvp.css';
 import { Todo } from 'types';
+import TodoItem from 'components/TodoItem';
 
 function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -14,16 +15,13 @@ function App() {
     }
   }, [todos, setTodos]);
 
-  const renderedTodos = todos.map(todo => (
-    <li key={todo.content}>
-      {todo.content}: {todo.isDone ? 'true' : 'false'}
-    </li>
-  ));
-
   return (
     <main>
-      <h3>To-dos: </h3>
-      <ul>{renderedTodos}</ul>
+      {todos.map(todo => (
+        <>
+          <TodoItem todo={todo} /> <br />{' '}
+        </>
+      ))}
     </main>
   );
 }

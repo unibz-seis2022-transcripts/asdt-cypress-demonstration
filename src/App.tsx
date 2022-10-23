@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import logo from './logo.svg';
 import './styles/mvp.css';
 import { Todo } from 'types';
 import TodoItem from 'components/TodoItem';

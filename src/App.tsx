@@ -1,25 +1,30 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
-import './App.css';
+import './styles/mvp.css';
+import { Todo } from 'types';
 
 function App() {
+  const [todos, setTodos] = useState<Todo[]>([]);
+  useEffect(() => {
+    if (todos.length === 0) {
+      setTodos([
+        { content: 'foo bar', isDone: false },
+        { content: 'Take out the trash', isDone: true },
+      ]);
+    }
+  }, [todos, setTodos]);
+
+  const renderedTodos = todos.map(todo => (
+    <li key={todo.content}>
+      {todo.content}: {todo.isDone ? 'true' : 'false'}
+    </li>
+  ));
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <main>
+      <h3>To-dos: </h3>
+      <ul>{renderedTodos}</ul>
+    </main>
   );
 }
 

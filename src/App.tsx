@@ -8,19 +8,31 @@ function App() {
   useEffect(() => {
     if (todos.length === 0) {
       setTodos([
-        { content: 'foo bar', isDone: false },
-        { content: 'Take out the trash', isDone: true },
+        { id: 1, content: 'foo bar', isDone: false },
+        { id: 2, content: 'Take out the trash', isDone: false },
       ]);
     }
   }, [todos, setTodos]);
 
+  const toggleTodoDone = (id: number): void => {
+    const updatedTodos = todos.map(todos => {
+      if (id === todos.id) {
+        return { ...todos, isDone: !todos.isDone };
+      }
+      return todos;
+    });
+    setTodos(updatedTodos);
+  };
+
   return (
     <main>
-      {todos.map(todo => (
-        <>
-          <TodoItem todo={todo} /> <br />{' '}
-        </>
-      ))}
+      <ul style={{ listStyle: 'none' }}>
+        {todos.map((todo, index) => (
+          <li key={index}>
+            <TodoItem todo={todo} toggleTodoDone={toggleTodoDone} />
+          </li>
+        ))}
+      </ul>
     </main>
   );
 }

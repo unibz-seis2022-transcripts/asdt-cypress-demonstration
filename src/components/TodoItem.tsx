@@ -3,12 +3,25 @@ import { Todo } from 'types';
 
 interface TodoProps {
   todo: Todo;
+  toggleTodoDone: (id: number) => void;
 }
 
-export default function TodoItem({ todo }: TodoProps): ReactElement {
+export default function TodoItem({
+  todo,
+  toggleTodoDone,
+}: TodoProps): ReactElement {
   return (
-    <>
-      <input type={'checkbox'} checked={todo.isDone} /> {todo.content}
-    </>
+    <p
+      className="todo-item"
+      id={`todo-item-${todo.id}`}
+      style={{ textDecoration: todo.isDone ? 'line-through' : '' }}
+    >
+      <input
+        type={'checkbox'}
+        defaultChecked={todo.isDone}
+        onChange={() => toggleTodoDone(todo.id)}
+      />{' '}
+      {todo.content}
+    </p>
   );
 }

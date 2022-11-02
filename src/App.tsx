@@ -1,20 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import './styles/mvp.css';
 import { Todo } from 'types';
 import TodoItem from 'components/TodoItem';
+import TodoForm from 'components/TodoForm';
+import { nanoid } from 'nanoid';
 
 function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
-  useEffect(() => {
-    if (todos.length === 0) {
-      setTodos([
-        { id: 1, content: 'foo bar', isDone: false },
-        { id: 2, content: 'Take out the trash', isDone: false },
-      ]);
-    }
-  }, [todos, setTodos]);
 
-  const toggleTodoDone = (id: number): void => {
+  const toggleTodoDone = (id: string): void => {
     const updatedTodos = todos.map(todos => {
       if (id === todos.id) {
         return { ...todos, isDone: !todos.isDone };
@@ -24,8 +18,19 @@ function App() {
     setTodos(updatedTodos);
   };
 
+  const handleFormSubmit = (formContent: string) => {
+    const newTodo: Todo = {
+      id: nanoid(),
+      content: formContent,
+      isDone: false,
+    };
+    const newTodosArray = [...todos, newTodo];
+    setTodos(newTodosArray);
+  };
+
   return (
     <main>
+      <TodoForm onSubmit={handleFormSubmit} />
       <ul style={{ listStyle: 'none' }}>
         {todos.map((todo, index) => (
           <li key={index}>

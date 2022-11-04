@@ -31,6 +31,7 @@ function App() {
 
   return (
     <main>
+      <img src="nothing.png" alt="Just do nothing" width={'200x'} />
       <h1>Todon't</h1>
       <TodoForm onSubmit={handleFormSubmit} />
       <TodoCount todoCount={todos.filter(todo => !todo.isDone).length} />

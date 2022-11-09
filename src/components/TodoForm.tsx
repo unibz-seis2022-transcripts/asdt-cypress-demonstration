@@ -23,11 +23,13 @@ export default function TodoForm({ onSubmit }: TodoFormProps): ReactElement {
       <input
         id="new-todo-input"
         type={'text'}
-        placeholder={'Add new todo'}
+        placeholder={'Describe new todo here'}
         onChange={event => setInputContent(event.target.value)}
         value={inputContent}
       />
-      <button id="todo-submit-button">Create new todo</button>
+      <button id="todo-submit-button" className="button clickable">
+        Create new todo
+      </button>
     </form>
   );
 }

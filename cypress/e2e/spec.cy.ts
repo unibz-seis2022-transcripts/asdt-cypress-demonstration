@@ -36,4 +36,46 @@ describe('empty spec', () => {
     cy.get('.todo-item').first().find('input').click();
     cy.get('#todo-count-label').should('have.text', 'Only 1 task remaining');
   });
+
+  it('allows filtering todo items', () => {
+    const activeBackgroundColour = 'rgba(146, 13, 233, 0.043)';
+    cy.get('#todo-filter-all').should(
+      'have.css',
+      'background-color',
+      activeBackgroundColour,
+    );
+
+    addNewTodo(cy, 'First todo');
+    addNewTodo(cy, 'Second todo');
+    cy.get('.todo-item').first().find('input').click();
+
+    cy.get('#todo-filter-completed').click();
+    cy.get('#todo-filter-completed').should(
+      'have.css',
+      'background-color',
+      activeBackgroundColour,
+    );
+    cy.get('.todo-item').should('have.length', 1);
+    cy.get('.todo-item').first().find('input').should('have.attr', 'checked');
+
+    cy.get('#todo-filter-active').click();
+    cy.get('#todo-filter-active').should(
+      'have.css',
+      'background-color',
+      activeBackgroundColour,
+    );
+    cy.get('.todo-item').should('have.length', 1);
+    cy.get('.todo-item')
+      .first()
+      .find('input')
+      .should('not.have.attr', 'checked');
+
+    cy.get('#todo-filter-all').click();
+    cy.get('#todo-filter-all').should(
+      'have.css',
+      'background-color',
+      activeBackgroundColour,
+    );
+    cy.get('.todo-item').should('have.length', 2);
+  });
 });

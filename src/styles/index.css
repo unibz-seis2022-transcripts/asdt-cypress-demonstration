@@ -11,3 +11,15 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.button.clickable {
+  background-color: var(--color-secondary);
+  border-color: var(--color-secondary);
+  color: white;
+}
+
+.button.active {
+  background-color: var(--color-secondary-accent);
+  border-color: var(--color-secondary-accent);
+  color: black;
+}

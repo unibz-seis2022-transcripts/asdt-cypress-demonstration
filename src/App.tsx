@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import './styles/mvp.css';
 import { Filter, Todo } from 'types';
 import TodoItem from 'components/TodoItem';
@@ -10,6 +10,10 @@ import FilterButtons from 'components/FilterButtons';
 function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [activeFilter, setActiveFilter] = useState<Filter>('all');
+  const todoCount = useMemo(
+    () => todos.filter(todo => !todo.isDone).length,
+    [todos],
+  );
 
   const toggleTodoDone = (id: string): void => {
     const updatedTodos = todos.map(todos => {
@@ -50,7 +54,7 @@ function App() {
         activeButton={activeFilter}
         onButtonClick={handleFilterButtonClick}
       />
-      <TodoCount todoCount={todos.filter(todo => !todo.isDone).length} />
+      <TodoCount todoCount={todoCount} />
       <ul style={{ listStyle: 'none' }}>
         {todos.filter(filters[activeFilter]).map(todo => (
           <li key={todo.id}>

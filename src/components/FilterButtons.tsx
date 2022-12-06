@@ -15,6 +15,7 @@ export default function FilterButtons({
     <>
       {filters.map(filter => (
         <FilterButton
+          key={filter}
           title={filter}
           isActive={activeButton === filter}
           onClick={onButtonClick}

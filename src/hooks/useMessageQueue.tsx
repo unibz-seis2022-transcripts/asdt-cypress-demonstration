@@ -1,4 +1,4 @@
-import { AMQPQueue } from '@cloudamqp/amqp-client';
+import { AMQPChannel, AMQPQueue } from '@cloudamqp/amqp-client';
 import { useEffect, useState } from 'react';
 import { getReceiverChannel } from './messageQueue';
 
@@ -8,7 +8,14 @@ const useMessageQueue = (topic: string) => {
 
   useEffect(() => {
     const initQueue = async () => {
-      const channel = await getReceiverChannel();
+      let channel: AMQPChannel;
+      try {
+        channel = await getReceiverChannel();
+      } catch (error) {
+        console.log(`Could not obtain mq channel for topic ${topic}: ${error}`);
+        return undefined;
+      }
+
       const queue = await channel.queue(topic);
       await queue.bind('amq.topic');
 

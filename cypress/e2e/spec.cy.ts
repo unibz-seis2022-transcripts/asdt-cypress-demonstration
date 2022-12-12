@@ -56,7 +56,7 @@ describe('empty spec', () => {
       activeBackgroundColour,
     );
     cy.get('.todo-item').should('have.length', 1);
-    cy.get('.todo-item').first().find('input').should('have.attr', 'checked');
+    cy.get('.todo-item').first().find('input').should('be.checked');
 
     cy.get('#todo-filter-active').click();
     cy.get('#todo-filter-active').should(
@@ -65,10 +65,7 @@ describe('empty spec', () => {
       activeBackgroundColour,
     );
     cy.get('.todo-item').should('have.length', 1);
-    cy.get('.todo-item')
-      .first()
-      .find('input')
-      .should('not.have.attr', 'checked');
+    cy.get('.todo-item').first().find('input').should('not.be.checked');
 
     cy.get('#todo-filter-all').click();
     cy.get('#todo-filter-all').should(

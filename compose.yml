@@ -1,0 +1,15 @@
+services:
+  message-queue:
+    image: rabbitmq:latest
+    ports:
+      - '15672:15672'
+      - '5672:5672'
+    volumes:
+      - ./rabbitmq:/etc/rabbitmq
+  mq-websockets:
+    image: cloudamqp/websocket-tcp-relay
+    ports:
+      - '15670:15670'
+    command: '--upstream tcp://message-queue:5672'
+    depends_on:
+      - 'message-queue'

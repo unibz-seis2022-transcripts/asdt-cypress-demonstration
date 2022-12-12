@@ -14,7 +14,7 @@ export default class TodoItem extends React.Component<TodoItemProps> {
         <input
           id={`todo-checkbox-${this.props.todo.id}`}
           type={'checkbox'}
-          defaultChecked={this.props.todo.isDone}
+          checked={this.props.todo.isDone}
           onChange={() => this.props.toggleTodoDone(this.props.todo.id)}
         />{' '}
         <label

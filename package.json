@@ -3,8 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@cloudamqp/amqp-client": "2.1.0",
     "@testing-library/jest-dom": "5.16.1",
     "@testing-library/react": "12.1.2",
+    "@types/amqplib": "0.10.0",
     "@types/jest": "27.4.0",
     "@types/node": "14.14.31",
     "@types/react": "18.0.2",

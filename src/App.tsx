@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import './styles/mvp.css';
 import { Filter, Todo } from 'types';
 import TodoItem from 'components/TodoItem';
@@ -6,91 +6,96 @@ import TodoForm from 'components/TodoForm';
 import { nanoid } from 'nanoid';
 import TodoCount from 'components/TodoCount';
 import FilterButtons from 'components/FilterButtons';
-import React from 'react';
+import useMessageQueue from 'hooks/useMessageQueue';
 
-interface AppState {
-  todos: Todo[];
-  activeFilter: Filter;
-  todoCount: number;
-}
+function App() {
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [activeFilter, setActiveFilter] = useState<Filter>('all');
+  const todoCount = useMemo(
+    () => todos.filter(todo => !todo.isDone).length,
+    [todos],
+  );
+  const remotelyAddedTodo = useMessageQueue('new-todos');
+  const remotelyResolvedTodo = useMessageQueue('resolved-todos');
 
-class App extends React.PureComponent<{}, AppState> {
-  state: Readonly<AppState> = {
-    todos: [],
-    activeFilter: 'all',
-    todoCount: 0,
-  };
+  useEffect(() => {
+    if (remotelyAddedTodo) {
+      setTodos(todos => {
+        const newTodos: Todo[] = [
+          ...todos,
+          { content: remotelyAddedTodo, id: nanoid(), isDone: false },
+        ];
+        return newTodos;
+      });
+    }
+  }, [remotelyAddedTodo]);
 
-  constructor(props) {
-    super(props);
-    this.state = { todos: [], activeFilter: 'all', todoCount: 0 };
-  }
+  useEffect(() => {
+    if (remotelyResolvedTodo) {
+      setTodos(todos => {
+        // Todo: Find a nicer way to update the todos list
+        const newTodos: Todo[] = [...todos];
+        const todo = newTodos.find(todo =>
+          todo.content.includes(remotelyResolvedTodo),
+        );
+        if (todo) {
+          todo.isDone = true;
+        }
 
-  componentDidMount(): void {
-    this.setState(state => ({
-      todoCount: state.todos.filter(todo => !todo.isDone).length,
-    }));
-  }
+        return newTodos;
+      });
+    }
+  }, [remotelyResolvedTodo]);
 
-  componentDidUpdate(): void {
-    this.setState(state => ({
-      todoCount: state.todos.filter(todo => !todo.isDone).length,
-    }));
-  }
-
-  private toggleTodoDone = (id: string): void => {
-    const updatedTodos = this.state.todos.map(todos => {
+  const toggleTodoDone = (id: string): void => {
+    const updatedTodos = todos.map(todos => {
       if (id === todos.id) {
         return { ...todos, isDone: !todos.isDone };
       }
       return todos;
     });
-    this.setState({ todos: updatedTodos });
+    setTodos(updatedTodos);
   };
 
-  private handleFormSubmit = (formContent: string) => {
+  const handleFormSubmit = (formContent: string) => {
     const newTodo: Todo = {
       id: nanoid(),
       content: formContent,
       isDone: false,
     };
-    const newTodosArray = [...this.state.todos, newTodo];
-    this.setState({ todos: newTodosArray });
+    const newTodosArray = [...todos, newTodo];
+    setTodos(newTodosArray);
   };
 
-  private handleFilterButtonClick = (clickedButton: Filter) => {
-    this.setState({ activeFilter: clickedButton });
+  const handleFilterButtonClick = (clickedButton: Filter) => {
+    setActiveFilter(clickedButton);
   };
 
-  private filters: Record<Filter, (todo: Todo) => boolean> = {
+  const filters: Record<Filter, (todo: Todo) => boolean> = {
     all: () => true,
     completed: todo => todo.isDone,
     active: todo => !todo.isDone,
   };
 
-  render(): React.ReactNode {
-    return (
-      <main>
-        <img src="nothing.png" alt="Just do nothing" width={'200x'} />
-        <h1>Todon't</h1>
-        <TodoForm onSubmit={this.handleFormSubmit} />
-        <FilterButtons
-          activeButton={this.state.activeFilter}
-          onButtonClick={this.handleFilterButtonClick}
-        />
-        <TodoCount todoCount={this.state.todoCount} />
-        <ul style={{ listStyle: 'none' }}>
-          {this.state.todos
-            .filter(this.filters[this.state.activeFilter])
-            .map(todo => (
-              <li key={todo.id}>
-                <TodoItem todo={todo} toggleTodoDone={this.toggleTodoDone} />
-              </li>
-            ))}
-        </ul>
-      </main>
-    );
-  }
+  return (
+    <main>
+      <img src="nothing.png" alt="Just do nothing" width={'200x'} />
+      <h1>Todon't</h1>
+      <TodoForm onSubmit={handleFormSubmit} />
+      <FilterButtons
+        activeButton={activeFilter}
+        onButtonClick={handleFilterButtonClick}
+      />
+      <TodoCount todoCount={todoCount} />
+      <ul style={{ listStyle: 'none' }}>
+        {todos.filter(filters[activeFilter]).map(todo => (
+          <li key={todo.id}>
+            <TodoItem todo={todo} toggleTodoDone={toggleTodoDone} />
+          </li>
+        ))}
+      </ul>
+    </main>
+  );
 }
 
-export default memo(App);
+export default App;

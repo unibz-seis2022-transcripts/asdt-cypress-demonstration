@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { ReactElement, useEffect, useMemo, useState } from 'react';
 import './styles/mvp.css';
 import { Filter, Todo } from 'types';
 import TodoItem from 'components/TodoItem';
@@ -8,7 +8,7 @@ import TodoCount from 'components/TodoCount';
 import FilterButtons from 'components/FilterButtons';
 import useMessageQueue from 'hooks/useMessageQueue';
 
-function App() {
+function App(): ReactElement {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [activeFilter, setActiveFilter] = useState<Filter>('all');
   const todoCount = useMemo(
@@ -79,7 +79,7 @@ function App() {
 
   return (
     <main>
-      <img src="nothing.png" alt="Just do nothing" width={'200x'} />
+      <img id="todont" src="nothing.png" alt="Just do nothing" width={'200x'} />
       <h1>Todon't</h1>
       <TodoForm onSubmit={handleFormSubmit} />
       <FilterButtons
